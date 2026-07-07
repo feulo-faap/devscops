@@ -1,0 +1,27 @@
+body{
+
+    font-family: Arial;
+
+    margin:40px;
+
+}
+
+h1{
+
+    color:#1b4f72;
+
+}
+
+table{
+
+    border-collapse:collapse;
+
+}
+
+td,th{
+
+    border:1px solid #ddd;
+
+    padding:8px;
+
+}
