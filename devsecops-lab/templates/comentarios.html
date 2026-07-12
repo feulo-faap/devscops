@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<h2>
+
+Comentários
+
+</h2>
+
+<form
+
+method="post"
+
+action="/novo-comentario">
+
+<div class="mb-3">
+
+<input
+
+class="form-control"
+
+placeholder="Nome"
+
+name="autor">
+
+</div>
+
+<div class="mb-3">
+
+<textarea
+
+class="form-control"
+
+name="comentario">
+
+</textarea>
+
+</div>
+
+<button
+
+class="btn btn-success">
+
+Enviar
+
+</button>
+
+</form>
+
+<hr>
+
+{% for comentario in comentarios %}
+
+<div class="card mb-3">
+
+<div class="card-body">
+
+<strong>
+
+{{comentario.autor|safe}}
+
+</strong>
+
+<hr>
+
+{{comentario.comentario|safe}}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

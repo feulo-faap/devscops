@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from database.database import conectar
 
 admin_bp = Blueprint(
@@ -22,38 +22,4 @@ def admin():
 
     conn.close()
 
-    html = "<h2>Painel Administrativo</h2>"
-
-    html += "<table border=1>"
-
-    html += """
-    <tr>
-
-    <th>Usuário</th>
-
-    <th>Senha</th>
-
-    <th>Perfil</th>
-
-    </tr>
-    """
-
-    for usuario in usuarios:
-
-        html += f"""
-
-        <tr>
-
-        <td>{usuario["usuario"]}</td>
-
-        <td>{usuario["senha"]}</td>
-
-        <td>{usuario["perfil"]}</td>
-
-        </tr>
-
-        """
-
-    html += "</table>"
-
-    return html
+    return render_template("admin.html", usuarios=usuarios)

@@ -1,5 +1,5 @@
-from flask import Blueprint
-from flask import request
+from flask import Blueprint, request, render_template, redirect
+
 
 from database.database import conectar
 
@@ -23,50 +23,7 @@ def alunos():
 
     conn.close()
 
-    html = """
-    <h2>Lista de alunos</h2>
-
-    <table border=1>
-
-    <tr>
-
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Curso</th>
-        <th>Nota</th>
-
-    </tr>
-    """
-
-    for aluno in alunos:
-
-        html += f"""
-
-        <tr>
-
-        <td>{aluno["id"]}</td>
-
-        <td>
-
-        <a href="/perfil/{aluno["id"]}">
-
-        {aluno["nome"]}
-
-        </a>
-
-        </td>
-
-        <td>{aluno["curso"]}</td>
-
-        <td>{aluno["nota"]}</td>
-
-        </tr>
-
-        """
-
-    html += "</table>"
-
-    return html
+    return render_template("alunos.html", alunos=alunos)
 
 
 @alunos_bp.route("/perfil/<id>")
@@ -166,61 +123,8 @@ def comentarios():
 
     conn.close()
 
-    html = "<h2>Comentários</h2>"
+    return render_template("comentarios.html", comentarios=comentarios)
 
-    html += """
-
-    <form
-    action="/novo-comentario"
-    method="post">
-
-    Nome
-
-    <input
-    name="autor">
-
-    <br><br>
-
-    Comentário
-
-    <input
-    name="comentario">
-
-    <br><br>
-
-    <button>
-
-    Enviar
-
-    </button>
-
-    </form>
-
-    <hr>
-
-    """
-
-    for comentario in comentarios:
-
-        html += f"""
-
-        <b>
-
-        {comentario["autor"]}
-
-        </b>
-
-        <br>
-
-        {comentario["comentario"]}
-
-        <hr>
-
-        """
-
-    return html
-
-    from flask import redirect
 
 @alunos_bp.route("/novo-comentario",methods=["POST"])
 def novo_comentario():

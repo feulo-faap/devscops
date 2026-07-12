@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<h2>
+
+Alunos
+
+</h2>
+
+<table class="table table-striped">
+
+<tr>
+
+<th>ID</th>
+
+<th>Nome</th>
+
+<th>Curso</th>
+
+<th>Nota</th>
+
+</tr>
+
+{% for aluno in alunos %}
+
+<tr>
+
+<td>{{aluno.id}}</td>
+
+<td>
+
+<a href="/perfil/{{aluno.id}}">
+
+{{aluno.nome}}
+
+</a>
+
+</td>
+
+<td>
+
+{{aluno.curso}}
+
+</td>
+
+<td>
+
+{{aluno.nota}}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

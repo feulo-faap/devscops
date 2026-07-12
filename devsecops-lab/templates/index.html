@@ -1,17 +1,52 @@
-<h2>Sistema Acadêmico</h2>
+{% extends 'base.html' %}
 
-<ul>
+{% block conteudo %}
 
-<li><a href="/login">Login</a></li>
+<div class="row">
 
-<li><a href="/alunos">Alunos</a></li>
+<div class="col-3">
 
-<li><a href="/buscar?nome=Ana">Pesquisar aluno</a></li>
+{% include 'menu.html' %}
 
-<li><a href="/comentarios">Comentários</a></li>
+</div>
 
-<li><a href="/mensagem?nome=Fulano">Mensagem</a></li>
+<div class="col">
 
-<li><a href="/admin">Área Administrativa</a></li>
+<h2>
 
-</ul>
+Sistema Acadêmico
+
+</h2>
+
+<p>
+
+Projeto criado para demonstrações de
+
+<strong>
+
+Segurança de Software
+
+</strong>
+
+e
+
+<strong>
+
+DevSecOps
+
+</strong>
+
+</p>
+
+<div class="alert alert-warning">
+
+Esta aplicação contém diversas vulnerabilidades
+intencionais.
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
