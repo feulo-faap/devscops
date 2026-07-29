@@ -1,0 +1,8 @@
+123456
+password
+secret
+changeme
+flask
+dev
+admin123
+devsecops
