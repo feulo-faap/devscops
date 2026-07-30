@@ -95,4 +95,3 @@ if __name__ == "__main__":
     print(f"  Substituicao ....... ~4 x 10^26 chaves possiveis (26!)")
     print(f"  Enigma (simplif.) .. rotores x posicoes x plugboard")
     print(f"  AES-256 ............ 2^256 chaves possiveis")
-    print("  (um numero maior que o de atomos no universo observavel)")

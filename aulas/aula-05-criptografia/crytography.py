@@ -31,9 +31,9 @@ salt_configurado = f"${versao}${custo}${salt_puro}".encode("utf-8")
 novo_hash_completo = bcrypt.hashpw(nova_senha.encode('utf-8'), salt_configurado)
 
 print("Novo hash gerado:", novo_hash_completo)
-#print(
-#    bcrypt.checkpw(
-#        senha.encode('utf-8'),
-#        hash_senha
-#    )
-#)
+print(
+    bcrypt.checkpw(
+        senha.encode('utf-8'),
+        hash_senha
+   )
+)
