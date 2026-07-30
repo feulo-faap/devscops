@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+
+<h2>
+
+Painel Administrativo
+
+</h2>
+
+<div class="alert alert-danger">
+
+Essa página somente é acessada por administradores
+
+</div>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Usuário</th>
+
+<th>Senha</th>
+
+<th>Perfil</th>
+
+</tr>
+
+{% for usuario in usuarios %}
+
+<tr>
+
+<td>{{usuario.usuario}}</td>
+
+<td>{{usuario.senha}}</td>
+
+<td>{{usuario.perfil}}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}
