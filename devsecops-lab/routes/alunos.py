@@ -72,7 +72,7 @@ def buscar():
     query = f"""
     SELECT *
     FROM alunos
-    WHERE nome LIKE '%{nome}%'
+    WHERE nome ='{nome}'
     """
 
     alunos = conn.execute(query).fetchall()
