@@ -14,7 +14,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r devsecopslab/requirements.txt
+          pip install -r devsecops-lab/requirements.txt
       - name: Install pytest
         run: |
           pip install pytest
