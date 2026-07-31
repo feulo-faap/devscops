@@ -1,0 +1,1088 @@
+* {
+  box-sizing: border-box;
+  }
+
+body {
+
+
+margin: 0;
+
+background: #f4f6f8;
+
+color: #202124;
+
+font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+
+}
+
+.container {
+
+
+max-width: 1100px;
+
+margin: auto;
+
+padding:
+    35px
+    20px
+    70px;
+
+
+}
+
+/* =========================================================
+CABEÇALHO
+========================================================= */
+
+header {
+
+
+text-align: center;
+
+margin-bottom: 30px;
+
+
+}
+
+header h1 {
+
+
+margin:
+    10px
+    0
+    5px;
+
+font-size: 2.3rem;
+
+
+}
+
+header p {
+
+
+color: #666;
+
+font-size: 1.1rem;
+
+
+}
+
+.badge {
+
+
+display: inline-block;
+
+padding:
+    6px
+    12px;
+
+border-radius: 20px;
+
+background: #202124;
+
+color: white;
+
+font-size: 0.75rem;
+
+font-weight: bold;
+
+letter-spacing: 1px;
+
+
+}
+
+/* =========================================================
+CARDS
+========================================================= */
+
+.card {
+
+
+background: white;
+
+border-radius: 12px;
+
+padding: 28px;
+
+margin-bottom: 25px;
+
+box-shadow:
+    0 2px 10px
+    rgba(0, 0, 0, 0.08);
+
+
+}
+
+.card h2 {
+
+
+margin-top: 0;
+
+
+}
+
+.explanation {
+
+
+color: #555;
+
+
+}
+
+.section-description {
+
+
+color: #666;
+
+
+}
+
+/* =========================================================
+FÓRMULA
+========================================================= */
+
+.formula {
+
+
+margin:
+    25px
+    0;
+
+padding: 20px;
+
+background: #f1f3f4;
+
+border-radius: 8px;
+
+text-align: center;
+
+font-family:
+    "Times New Roman",
+    serif;
+
+font-size: 1.5rem;
+
+
+}
+
+/* =========================================================
+ÁREA DE DESENHO
+========================================================= */
+
+.draw-section {
+
+
+margin:
+    25px
+    0;
+
+padding: 25px;
+
+background: #f8f9fa;
+
+border:
+    1px solid
+    #ddd;
+
+border-radius: 10px;
+
+
+}
+
+.draw-section h3 {
+
+
+margin-top: 0;
+
+margin-bottom: 8px;
+
+
+}
+
+.draw-section p {
+
+
+color: #666;
+
+margin-bottom: 20px;
+
+
+}
+
+/* Container do canvas */
+
+.canvas-container {
+
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+margin:
+    20px
+    0;
+
+
+}
+
+/* Guia de tamanho sobre o canvas */
+
+.canvas-wrapper {
+
+
+position: relative;
+
+line-height: 0;
+
+
+}
+
+.canvas-guide {
+
+
+position: absolute;
+
+top: 8%;
+
+left: 22%;
+
+right: 22%;
+
+bottom: 8%;
+
+border:
+    2px dashed
+    rgba(255, 255, 255, 0.22);
+
+border-radius: 4px;
+
+pointer-events: none;
+
+
+}
+
+/* Canvas */
+
+#drawingCanvas {
+
+
+display: block;
+
+width: 280px;
+
+height: 280px;
+
+background: black;
+
+border:
+    4px solid
+    #333;
+
+border-radius: 8px;
+
+cursor: crosshair;
+
+touch-action: none;
+
+image-rendering: pixelated;
+
+box-shadow:
+    0 3px 10px
+    rgba(0, 0, 0, 0.25);
+
+
+}
+
+/* Botões do desenho */
+
+.drawing-buttons {
+
+
+display: flex;
+
+justify-content: center;
+
+gap: 10px;
+
+
+}
+
+.secondary-button {
+
+
+background: #666;
+
+
+}
+
+.secondary-button:hover {
+
+
+background: #444;
+
+
+}
+
+/* =========================================================
+SEPARADOR
+========================================================= */
+
+.divider {
+
+
+display: flex;
+
+align-items: center;
+
+gap: 15px;
+
+margin:
+    30px
+    0;
+
+color: #777;
+
+font-size: 0.9rem;
+
+
+}
+
+.divider::before,
+.divider::after {
+
+
+content: "";
+
+flex: 1;
+
+height: 1px;
+
+background: #ddd;
+
+
+}
+
+/* =========================================================
+FORMULÁRIOS
+========================================================= */
+
+.form-group {
+
+
+margin-bottom: 25px;
+
+
+}
+
+.form-group label {
+
+
+display: block;
+
+font-weight: bold;
+
+margin-bottom: 10px;
+
+
+}
+
+input[type="file"] {
+
+
+width: 100%;
+
+padding: 12px;
+
+border:
+    1px solid
+    #ccc;
+
+border-radius: 7px;
+
+background: white;
+
+
+}
+
+small {
+
+
+display: block;
+
+margin-top: 7px;
+
+color: #777;
+
+line-height: 1.4;
+
+
+}
+
+/* =========================================================
+EPSILON
+========================================================= */
+
+.epsilon-row {
+
+
+display: flex;
+
+align-items: center;
+
+gap: 20px;
+
+
+}
+
+input[type="range"] {
+
+
+flex: 1;
+
+cursor: pointer;
+
+
+}
+
+#epsilonValue {
+
+
+width: 60px;
+
+font-weight: bold;
+
+font-size: 1.2rem;
+
+text-align: center;
+
+
+}
+
+.epsilon-scale {
+
+
+display: flex;
+
+justify-content: space-between;
+
+color: #888;
+
+font-size: 0.8rem;
+
+margin-top: 5px;
+
+
+}
+
+/* =========================================================
+BOTÕES
+========================================================= */
+
+button {
+
+
+border: 0;
+
+border-radius: 7px;
+
+padding:
+    13px
+    22px;
+
+color: white;
+
+font-size: 1rem;
+
+cursor: pointer;
+
+
+}
+
+.primary-button {
+
+
+background: #202124;
+
+
+}
+
+.primary-button:hover {
+
+
+opacity: 0.85;
+
+
+}
+
+/* =========================================================
+CLASSIFICAÇÃO
+========================================================= */
+
+.classification {
+
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+gap: 30px;
+
+margin:
+    30px
+    0;
+
+
+}
+
+.classification-box {
+
+
+width: 250px;
+
+text-align: center;
+
+border:
+    2px solid
+    #ddd;
+
+border-radius: 12px;
+
+padding: 20px;
+
+
+}
+
+.classification-box.original {
+
+
+background: #f8f9fa;
+
+
+}
+
+.classification-box.changed {
+
+
+border-color: #d93025;
+
+background: #fff5f5;
+
+
+}
+
+.classification-box.unchanged {
+
+
+border-color: #f9ab00;
+
+background: #fffaf0;
+
+
+}
+
+.classification-label {
+
+
+display: block;
+
+font-weight: bold;
+
+font-size: 0.8rem;
+
+
+}
+
+.classification-box strong {
+
+
+display: block;
+
+font-size: 5rem;
+
+margin:
+    10px
+    0;
+
+
+}
+
+.arrow {
+
+
+font-size: 3rem;
+
+
+}
+
+/* =========================================================
+MENSAGENS
+========================================================= */
+
+.success {
+
+
+background: #e6f4ea;
+
+border:
+    1px solid
+    #81c995;
+
+border-radius: 8px;
+
+padding: 18px;
+
+text-align: center;
+
+
+}
+
+.warning {
+
+
+background: #fef7e0;
+
+border:
+    1px solid
+    #f9ab00;
+
+border-radius: 8px;
+
+padding: 18px;
+
+text-align: center;
+
+
+}
+
+.error {
+
+
+background: #fce8e6;
+
+border:
+    1px solid
+    #d93025;
+
+border-radius: 8px;
+
+padding: 20px;
+
+margin-bottom: 25px;
+
+color: #a50e0e;
+
+
+}
+
+/* =========================================================
+IMAGENS
+========================================================= */
+
+.images {
+
+
+display: grid;
+
+grid-template-columns:
+    repeat(3, 1fr);
+
+gap: 20px;
+
+
+}
+
+.image-card {
+
+
+text-align: center;
+
+border:
+    1px solid
+    #ddd;
+
+border-radius: 10px;
+
+padding: 18px;
+
+
+}
+
+.image-card h3 {
+
+
+margin-top: 0;
+
+
+}
+
+.image-container {
+
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+
+}
+
+.image-card img {
+
+
+width: 240px;
+
+height: 240px;
+
+max-width: 100%;
+
+object-fit: contain;
+
+background: black;
+
+image-rendering: pixelated;
+
+border-radius: 5px;
+
+
+}
+
+.image-card p {
+
+
+color: #666;
+
+font-size: 0.9rem;
+
+
+}
+
+/* =========================================================
+INFORMAÇÕES TÉCNICAS
+========================================================= */
+
+.technical-info {
+
+
+display: flex;
+
+justify-content: center;
+
+gap: 50px;
+
+margin-top: 25px;
+
+padding: 20px;
+
+background: #f5f5f5;
+
+border-radius: 8px;
+
+text-align: center;
+
+
+}
+
+.technical-info span {
+
+
+display: block;
+
+color: #777;
+
+font-size: 0.85rem;
+
+
+}
+
+.technical-info strong {
+
+
+display: block;
+
+font-size: 1.3rem;
+
+margin-top: 5px;
+
+
+}
+
+/* =========================================================
+PROBABILIDADES
+========================================================= */
+
+.probability-header {
+
+
+display: grid;
+
+grid-template-columns:
+    50px
+    1fr
+    60px
+    1fr
+    60px;
+
+gap: 10px;
+
+margin-top: 25px;
+
+margin-bottom: 10px;
+
+color: #777;
+
+font-size: 0.8rem;
+
+
+}
+
+.probability-header span:nth-child(2) {
+
+
+grid-column: 2 / 4;
+
+
+}
+
+.probability-header span:nth-child(3) {
+
+
+grid-column: 4 / 6;
+
+
+}
+
+.probability {
+
+
+display: grid;
+
+grid-template-columns:
+    30px
+    1fr
+    60px
+    1fr
+    60px;
+
+gap: 10px;
+
+align-items: center;
+
+margin-bottom: 8px;
+
+
+}
+
+.digit-label {
+
+
+text-align: center;
+
+
+}
+
+.bar-container {
+
+
+height: 15px;
+
+background: #eee;
+
+border-radius: 10px;
+
+overflow: hidden;
+
+
+}
+
+.bar {
+
+
+height: 100%;
+
+border-radius: 10px;
+
+
+}
+
+.original-bar {
+
+
+background: #777;
+
+
+}
+
+.adversarial-bar {
+
+
+background: #d93025;
+
+
+}
+
+.probability > span {
+
+
+font-size: 0.8rem;
+
+
+}
+
+.legend {
+
+
+display: flex;
+
+justify-content: center;
+
+gap: 30px;
+
+margin-top: 20px;
+
+color: #666;
+
+
+}
+
+/* =========================================================
+PARTE DIDÁTICA
+========================================================= */
+
+.lesson {
+
+
+line-height: 1.6;
+
+
+}
+
+.lesson li {
+
+
+margin-bottom: 12px;
+
+
+}
+
+.important {
+
+
+margin-top: 25px;
+
+padding: 18px;
+
+border-left:
+    5px solid
+    #202124;
+
+background: #f5f5f5;
+
+
+}
+
+/* =========================================================
+RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 800px) {
+
+
+.images {
+
+    grid-template-columns: 1fr;
+
+}
+
+
+.classification {
+
+    flex-direction: column;
+
+}
+
+
+.arrow {
+
+    transform:
+        rotate(90deg);
+
+}
+
+
+.technical-info {
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+
+.probability {
+
+    grid-template-columns:
+        25px
+        1fr
+        50px;
+
+}
+
+
+.probability
+.bar-container:nth-of-type(2),
+
+.probability
+span:nth-of-type(2) {
+
+    display: none;
+
+}
+}
+.action-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+}
+
+
+.classify-button {
+
+    background: #1a73e8;
+
+}
+
+
+.classify-button:hover {
+
+    background: #1557b0;
+
+}
+
+
+.attack-button {
+
+    background: #d93025;
+
+}
+
+
+.attack-button:hover {
+
+    background: #b3261e;
+
+}

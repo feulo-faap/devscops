@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Laboratório FGSM
+</title>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style-fgsm.css') }}"
+>
+
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+<!-- =====================================================
+     CABEÇALHO
+     ===================================================== -->
+
+<header>
+
+    <div class="badge">
+        SEGURANÇA EM MACHINE LEARNING
+    </div>
+
+    <h1>
+        Ataque Adversarial — FGSM
+    </h1>
+
+    <p>
+        Fast Gradient Sign Method
+    </p>
+
+</header>
+
+
+<!-- =====================================================
+     EXPLICAÇÃO
+     ===================================================== -->
+
+<section class="card">
+
+    <h2>
+        O que estamos demonstrando?
+    </h2>
+
+    <p>
+
+        Um classificador de Machine Learning pode ser
+        enganado modificando apenas alguns pixels da
+        imagem de entrada.
+
+    </p>
+
+    <p>
+
+        A alteração pode ser praticamente imperceptível
+        para uma pessoa, mas suficiente para alterar a
+        decisão tomada pelo modelo.
+
+    </p>
+
+    <div class="formula">
+
+        x<sub>adv</sub> =
+        x +
+        ε · sign(∇<sub>x</sub> J(θ, x, y))
+
+    </div>
+
+    <p class="explanation">
+
+        O FGSM utiliza o gradiente da função de perda para
+        descobrir em qual direção os pixels devem ser
+        alterados para aumentar o erro do classificador.
+
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     FORMULÁRIO
+     ===================================================== -->
+
+<!-- =====================================================
+     ERRO
+     ===================================================== -->
+
+{% if resultado and resultado.erro %}
+
+    <div class="error">
+
+        <strong>
+            Erro
+        </strong>
+
+        <p>
+            {{ resultado.erro }}
+        </p>
+
+    </div>
+
+{% endif %}
+
+
+{% if resultado and resultado.tipo == "classificacao" %}
+
+<section class="card">
+
+    <h2>
+        Resultado da classificação
+    </h2>
+
+    <div class="classification">
+
+        <div class="classification-box original">
+
+            <span class="classification-label">
+                O MODELO IDENTIFICOU
+            </span>
+
+            <strong>
+                {{ resultado.predicao }}
+            </strong>
+
+            <small>
+                Confiança:
+                {{ "%.2f"|format(resultado.confianca) }}%
+            </small>
+
+        </div>
+
+        <div class="image-card">
+
+            <h3>
+                Entrada processada
+            </h3>
+
+            <div class="image-container">
+
+                <img
+                    src="{{ resultado.imagem }}"
+                    alt="Imagem processada para o classificador"
+                >
+
+            </div>
+
+            <p>
+                Representação 8 × 8 recebida pelo modelo.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="success">
+
+        <strong>
+            ✓ Classificação realizada
+        </strong>
+
+        <p>
+            Agora você pode executar o ataque FGSM
+            sobre este mesmo desenho.
+        </p>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<form
+    method="POST"
+    enctype="multipart/form-data"
+    onsubmit="prepareDrawing()"
+>
+
+    <section class="card">
+
+        <h2>
+            1. Crie o dígito
+        </h2>
+
+
+        <!-- =================================================
+             DESENHO
+             ================================================= -->
+
+        <div class="draw-section">
+
+            <h3>
+                Desenhe com o mouse
+            </h3>
+
+            <p>
+
+                Desenhe um único dígito na área abaixo,
+                ocupando toda a guia tracejada. Dígitos
+                pequenos ficam com o traço grosso demais
+                depois da redução para 8×8 e confundem o
+                classificador.
+
+            </p>
+
+            <div class="canvas-container">
+
+                <div class="canvas-wrapper">
+
+                    <canvas
+                        id="drawingCanvas"
+                        width="280"
+                        height="280"
+                    ></canvas>
+
+                    <div class="canvas-guide"></div>
+
+                </div>
+
+            </div>
+
+            <div class="drawing-buttons">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="clearCanvas()"
+                >
+                    Limpar desenho
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SEPARADOR
+             ================================================= -->
+
+        <div class="divider">
+
+            <span>
+                ou envie uma imagem
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             UPLOAD
+             ================================================= -->
+
+        <div class="form-group">
+
+            <label for="image">
+
+                Imagem do dígito
+
+            </label>
+
+            <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+            >
+
+            <small>
+
+                Opcional. A imagem será convertida para
+                escala de cinza e redimensionada para 8×8
+                pixels.
+
+            </small>
+
+        </div>
+
+
+        <!-- =================================================
+             CAMPO OCULTO COM O DESENHO
+             ================================================= -->
+
+        <input
+            type="hidden"
+            name="drawing"
+            id="drawingData"
+        >
+
+
+        <!-- =================================================
+             EPSILON
+             ================================================= -->
+
+        <div class="form-group">
+
+            <label for="epsilon">
+
+                ε — intensidade da perturbação
+
+            </label>
+
+            <div class="epsilon-row">
+
+                <input
+                    type="range"
+                    id="epsilon"
+                    name="epsilon"
+                    min="0"
+                    max="0.5"
+                    step="0.01"
+                    value="{{ '%.2f'|format(resultado.epsilon)
+                              if resultado and resultado.epsilon
+                              else '0.10' }}"
+                    oninput="
+                        document.getElementById(
+                            'epsilonValue'
+                        ).innerText = this.value
+                    "
+                >
+
+                <span id="epsilonValue">
+                    {{ '%.2f'|format(resultado.epsilon)
+                       if resultado and resultado.epsilon
+                       else '0.10' }}
+                </span>
+
+            </div>
+
+            <div class="epsilon-scale">
+
+                <span>
+                    0 — sem ataque
+                </span>
+
+                <span>
+                    0.5 — ataque forte
+                </span>
+
+            </div>
+
+            <small>
+
+                Valores maiores aumentam a intensidade
+                da alteração nos pixels.
+
+            </small>
+
+        </div>
+
+
+        <!-- =================================================
+             BOTÃO
+             ================================================= -->
+
+        <div class="action-buttons">
+
+    <button
+        type="submit"
+        class="classify-button"
+        formaction="{{ url_for('fgsm.classificar') }}"
+    >
+        🔍 Classificar desenho
+    </button>
+
+    <button
+        type="submit"
+        class="attack-button"
+        formaction="{{ url_for('fgsm.atacar') }}"
+    >
+        ⚡ Executar ataque FGSM
+    </button>
+
+</div>
+
+    </section>
+
+</form>
+
+
+{% if resultado and resultado.tipo == "ataque" %}
+
+
+    <!-- =================================================
+         CLASSIFICAÇÃO
+         ================================================= -->
+
+    <section class="card">
+
+        <h2>
+            2. Resultado da classificação
+        </h2>
+
+        <div class="classification">
+
+            <!-- ORIGINAL -->
+
+            <div class="classification-box original">
+
+                <span class="classification-label">
+                    ANTES DO ATAQUE
+                </span>
+
+                <strong>
+                    {{ resultado.predicao_original }}
+                </strong>
+
+                <small>
+
+                    Confiança:
+                    {{ "%.2f"|format(
+                        resultado.confianca_original
+                    ) }}%
+
+                </small>
+
+            </div>
+
+
+            <div class="arrow">
+                →
+            </div>
+
+
+            <!-- ADVERSARIAL -->
+
+            <div
+                class="
+                    classification-box
+                    {% if resultado.ataque_sucesso %}
+                        changed
+                    {% else %}
+                        unchanged
+                    {% endif %}
+                "
+            >
+
+                <span class="classification-label">
+                    DEPOIS DO FGSM
+                </span>
+
+                <strong>
+                    {{ resultado.predicao_adversarial }}
+                </strong>
+
+                <small>
+
+                    Confiança:
+                    {{ "%.2f"|format(
+                        resultado.confianca_adversarial
+                    ) }}%
+
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- MENSAGEM DE SUCESSO -->
+
+        {% if resultado.ataque_sucesso %}
+
+            <div class="success">
+
+                <strong>
+                    ✓ Ataque bem-sucedido
+                </strong>
+
+                <p>
+
+                    O classificador mudou sua previsão de
+
+                    <strong>
+                        {{ resultado.predicao_original }}
+                    </strong>
+
+                    para
+
+                    <strong>
+                        {{ resultado.predicao_adversarial }}
+                    </strong>.
+
+                </p>
+
+            </div>
+
+        {% else %}
+
+            <div class="warning">
+
+                <strong>
+                    ⚠ O ataque não alterou a classificação
+                </strong>
+
+                <p>
+
+                    Experimente aumentar o valor de ε.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =================================================
+         VISUALIZAÇÃO
+         ================================================= -->
+
+    <section class="card">
+
+        <h2>
+            3. Visualizando o ataque
+        </h2>
+
+        <p class="section-description">
+
+            A perturbação mostra a <em>direção</em> da
+            alteração de cada pixel: branco = clareado,
+            preto = escurecido, cinza = inalterado. O
+            tamanho da alteração é sempre ε, porque o FGSM
+            usa apenas o sinal do gradiente.
+
+        </p>
+
+
+        <div class="images">
+
+            <!-- ORIGINAL -->
+
+            <div class="image-card">
+
+                <h3>
+                    Imagem original
+                </h3>
+
+                <div class="image-container">
+
+                    <img
+                        src="{{ resultado.imagem_original }}"
+                        alt="Imagem original"
+                    >
+
+                </div>
+
+                <p>
+                    Entrada original do modelo.
+                </p>
+
+            </div>
+
+
+            <!-- PERTURBAÇÃO -->
+
+            <div class="image-card">
+
+                <h3>
+                    Perturbação
+                </h3>
+
+                <div class="image-container">
+
+                    <img
+                        src="{{ resultado.perturbacao }}"
+                        alt="Perturbação FGSM"
+                    >
+
+                </div>
+
+                <p>
+                    sign(∇<sub>x</sub> J) — direção da
+                    alteração de cada pixel.
+                </p>
+
+            </div>
+
+
+            <!-- ADVERSARIAL -->
+
+            <div class="image-card">
+
+                <h3>
+                    Imagem adversarial
+                </h3>
+
+                <div class="image-container">
+
+                    <img
+                        src="{{ resultado.imagem_adversarial }}"
+                        alt="Imagem adversarial"
+                    >
+
+                </div>
+
+                <p>
+                    Imagem original + perturbação.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMAÇÕES TÉCNICAS -->
+
+        <div class="technical-info">
+
+            <div>
+
+                <span>
+                    ε utilizado
+                </span>
+
+                <strong>
+                    {{ resultado.epsilon }}
+                </strong>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Maior alteração em um pixel
+                </span>
+
+                <strong>
+                    {{ "%.3f"|format(
+                        resultado.maior_perturbacao
+                    ) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PROBABILIDADES
+         ================================================= -->
+
+    <section class="card">
+
+        <h2>
+            4. Como as probabilidades mudaram?
+        </h2>
+
+        <p class="section-description">
+
+            Compare a distribuição de probabilidades antes
+            e depois do ataque.
+
+        </p>
+
+
+        <div class="probability-header">
+
+            <span>
+                Dígito
+            </span>
+
+            <span>
+                Antes
+            </span>
+
+            <span>
+                Depois
+            </span>
+
+        </div>
+
+
+        <div class="probabilities">
+
+            {% for item in resultado.probabilidades %}
+
+                <div class="probability">
+
+                    <strong class="digit-label">
+                        {{ item.digito }}
+                    </strong>
+
+
+                    <div class="bar-container">
+
+                        <div
+                            class="bar original-bar"
+                            style="
+                                width:
+                                {{ item.original }}%;
+                            "
+                        ></div>
+
+                    </div>
+
+                    <span>
+                        {{ "%.1f"|format(
+                            item.original
+                        ) }}%
+                    </span>
+
+
+                    <div class="bar-container">
+
+                        <div
+                            class="bar adversarial-bar"
+                            style="
+                                width:
+                                {{ item.adversarial }}%;
+                            "
+                        ></div>
+
+                    </div>
+
+                    <span>
+                        {{ "%.1f"|format(
+                            item.adversarial
+                        ) }}%
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="legend">
+
+            <span>
+                ■ Antes
+            </span>
+
+            <span>
+                ■ Depois do FGSM
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         EXPLICAÇÃO DIDÁTICA
+         ================================================= -->
+
+    <section class="card lesson">
+
+        <h2>
+            5. O que o atacante fez?
+        </h2>
+
+        <ol>
+
+            <li>
+
+                O atacante apresenta uma imagem ao
+                classificador.
+
+            </li>
+
+            <li>
+
+                O modelo calcula sua previsão e a função
+                de perda.
+
+            </li>
+
+            <li>
+
+                O gradiente da perda em relação aos pixels
+                indica como cada pixel deve ser alterado.
+
+            </li>
+
+            <li>
+
+                O FGSM utiliza apenas o sinal do gradiente.
+
+            </li>
+
+            <li>
+
+                O parâmetro <strong>ε</strong> controla
+                o tamanho da perturbação.
+
+            </li>
+
+            <li>
+
+                A imagem modificada é enviada novamente
+                ao classificador.
+
+            </li>
+
+            <li>
+
+                O modelo pode tomar uma decisão diferente
+                mesmo quando a alteração é praticamente
+                imperceptível para uma pessoa.
+
+            </li>
+
+        </ol>
+
+
+        <div class="important">
+
+            <strong>
+                Ponto importante
+            </strong>
+
+            <p>
+
+                O FGSM não modifica o modelo.
+
+                Ele modifica deliberadamente a
+                <strong>entrada</strong> do modelo para
+                induzir uma classificação incorreta.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+{% endif %}
+
+
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT — DESENHO
+     ========================================================= -->
+
+<script>
+
+const canvas =
+    document.getElementById(
+        "drawingCanvas"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+let drawing = false;
+
+
+// ---------------------------------------------------------
+// Inicialização
+// ---------------------------------------------------------
+
+function initializeCanvas() {
+
+    ctx.fillStyle = "black";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.strokeStyle = "white";
+
+    ctx.lineWidth = 25;
+
+    ctx.lineCap = "round";
+
+    ctx.lineJoin = "round";
+}
+
+
+initializeCanvas();
+
+
+
+
+// ---------------------------------------------------------
+// Posição do mouse
+// ---------------------------------------------------------
+
+function getMousePosition(event) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    return {
+
+        x:
+            (event.clientX - rect.left)
+            * canvas.width
+            / rect.width,
+
+        y:
+            (event.clientY - rect.top)
+            * canvas.height
+            / rect.height
+
+    };
+}
+
+
+// ---------------------------------------------------------
+// Mouse
+// ---------------------------------------------------------
+
+canvas.addEventListener(
+    "mousedown",
+    function(event) {
+
+        drawing = true;
+
+        const position =
+            getMousePosition(event);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            position.x,
+            position.y
+        );
+
+    }
+);
+
+
+canvas.addEventListener(
+    "mousemove",
+    function(event) {
+
+        if (!drawing) {
+            return;
+        }
+
+        const position =
+            getMousePosition(event);
+
+        ctx.lineTo(
+            position.x,
+            position.y
+        );
+
+        ctx.stroke();
+
+    }
+);
+
+
+canvas.addEventListener(
+    "mouseup",
+    stopDrawing
+);
+
+
+canvas.addEventListener(
+    "mouseleave",
+    stopDrawing
+);
+
+
+function stopDrawing() {
+
+    drawing = false;
+
+    ctx.closePath();
+
+}
+
+
+// ---------------------------------------------------------
+// Touch / tablet / celular
+// ---------------------------------------------------------
+
+canvas.addEventListener(
+    "touchstart",
+    function(event) {
+
+        event.preventDefault();
+
+        const touch =
+            event.touches[0];
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const x =
+            (touch.clientX - rect.left)
+            * canvas.width
+            / rect.width;
+
+        const y =
+            (touch.clientY - rect.top)
+            * canvas.height
+            / rect.height;
+
+        drawing = true;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x, y);
+
+    }
+);
+
+
+canvas.addEventListener(
+    "touchmove",
+    function(event) {
+
+        event.preventDefault();
+
+        if (!drawing) {
+            return;
+        }
+
+        const touch =
+            event.touches[0];
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const x =
+            (touch.clientX - rect.left)
+            * canvas.width
+            / rect.width;
+
+        const y =
+            (touch.clientY - rect.top)
+            * canvas.height
+            / rect.height;
+
+        ctx.lineTo(x, y);
+
+        ctx.stroke();
+
+    }
+);
+
+
+canvas.addEventListener(
+    "touchend",
+    stopDrawing
+);
+
+
+// ---------------------------------------------------------
+// Limpar
+// ---------------------------------------------------------
+
+function clearCanvas() {
+
+    ctx.fillStyle = "black";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.strokeStyle = "white";
+
+}
+
+
+// ---------------------------------------------------------
+// Preparar desenho para envio
+// ---------------------------------------------------------
+
+function canvasEstaVazio() {
+
+    const data =
+        ctx.getImageData(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        ).data;
+
+    // O canvas começa preto: qualquer pixel claro
+    // significa que existe um desenho.
+    for (let i = 0; i < data.length; i += 4) {
+
+        if (data[i] > 30) {
+            return false;
+        }
+
+    }
+
+    return true;
+
+}
+
+
+function prepareDrawing() {
+
+    // Enviar um canvas em branco faria o servidor
+    // recusar o upload de imagem, porque o desenho
+    // tem prioridade sobre o arquivo.
+    document.getElementById(
+        "drawingData"
+    ).value =
+        canvasEstaVazio()
+            ? ""
+            : canvas.toDataURL("image/png");
+
+}
+
+
+// ---------------------------------------------------------
+// Restaura o desenho depois do reload
+// ---------------------------------------------------------
+
+{% if resultado and resultado.drawing %}
+
+const savedDrawing =
+    {{ resultado.drawing | tojson }};
+
+const savedImage =
+    new Image();
+
+savedImage.onload = function() {
+
+    ctx.drawImage(
+        savedImage,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+};
+
+savedImage.src = savedDrawing;
+
+{% endif %}
+
+</script>
+
+</body>
+
+</html>

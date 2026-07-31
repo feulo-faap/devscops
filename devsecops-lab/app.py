@@ -7,6 +7,7 @@ from routes.auth import auth_bp
 from routes.alunos import alunos_bp
 from routes.admin import admin_bp
 from routes.ferramentas import ferramentas_bp
+from routes.fgsm import fgsm_bp
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(alunos_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(ferramentas_bp)
+app.register_blueprint(fgsm_bp)
 
 from flask import render_template
 
