@@ -1,0 +1,48 @@
+name: OWASP ZAP Scan
+
+on:
+
+  workflow_dispatch:
+
+  push:
+
+jobs:
+
+  zap:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: |
+          pip install -r devsecops-lab/requirements.txt
+
+      - name: Criar banco
+        run: |
+          python devsecops-lab/criar_db.py
+
+      - name: Iniciar aplicação
+        run: |
+          gunicorn --chdir devsecops-lab/ app:app \
+            --bind 127.0.0.1:5000 &
+          sleep 15
+
+      - name: Executar OWASP ZAP
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: "http://127.0.0.1:5000"
+          cmd_options: "-a"
+          artifact_name: zap-report
+        
+      - name: Upload relatório
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: report_html.html
