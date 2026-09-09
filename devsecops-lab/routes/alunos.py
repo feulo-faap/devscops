@@ -1,5 +1,4 @@
 from flask import Blueprint, request, render_template, redirect
-from sqlalchemy import text
 
 from database.database import conectar
 
