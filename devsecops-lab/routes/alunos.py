@@ -32,13 +32,13 @@ def perfil(id):
     conn = conectar()
 
     # VULNERABILIDADE
-    query = f"""
+    query = """
     SELECT *
     FROM alunos
     WHERE id= :id
     """
 
-    aluno = conn.execute(text(query), {'id': id}).fetchone()
+    aluno = conn.execute(query, {'id': id}).fetchone()
 
     conn.close()
 
