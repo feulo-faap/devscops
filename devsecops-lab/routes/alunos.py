@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect
-
+from sqlalchemy import text
 
 from database.database import conectar
 
@@ -38,7 +38,7 @@ def perfil(id):
     WHERE id= :id
     """
 
-    aluno = conn.execute(query, {'id': id}).fetchone()
+    aluno = conn.execute(text(query), {'id': id}).fetchone()
 
     conn.close()
 
